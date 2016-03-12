@@ -1,157 +1,432 @@
-set nocompatible " not vi compatible
+""""""""""""""""""""""""""""""""
+"
+" PACKAGE MANAGEMENT
+"
+""""""""""""""""""""""""""""""""
+" not a vi
+set nocompatible
+set encoding=utf-8
 
-"--------------
-" Load pathogen
-"--------------
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
-call pathogen#helptags()
+" start vundler
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-"------------------
-" Syntax and indent
-"------------------
-syntax on " turn on syntax highlighting
-set showmatch " show matching braces when text indicator is over them
+" core plugins
+Bundle "gmarik/vundle"
+Bundle "flazz/vim-colorschemes"
+Bundle "kien/ctrlp.vim"
 
-" highlight current line, but only in active window
-augroup CursorLineOnlyInActiveWindow
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
-augroup END
+" vim main plugins
+Bundle "sjl/gundo.vim"
+Bundle "vim-airline/vim-airline"
+Bundle "vim-airline/vim-airline-themes"
+Bundle "jlanzarotta/bufexplorer"
+Bundle "scrooloose/syntastic.git"
+Bundle "vim-scripts/tComment"
+Bundle "tpope/vim-surround"
+Bundle "mileszs/ack.vim"
+Bundle "rking/ag.vim"
+Bundle "edsono/vim-matchit"
+Bundle "tpope/vim-fugitive"
+Bundle "henrik/vim-indexed-search"
+Bundle "tpope/vim-abolish"
+Bundle "tpope/vim-repeat"
+Bundle "jiangmiao/auto-pairs"
+Bundle "xolox/vim-session"
+Bundle "xolox/vim-misc"
+Bundle "editorconfig/editorconfig-vim"
+Bundle "godlygeek/tabular"
+Bundle "airblade/vim-gitgutter"
+Bundle "Lokaltog/vim-easymotion"
+Bundle "rhysd/clever-f.vim"
 
-" vim can autodetect this based on $TERM (e.g. 'xterm-256color')
-" but it can be set to force 256 colors
-" set t_Co=256
-if &t_Co < 256
-    colorscheme default
-    set nocursorline " looks bad in this mode
-else
-    set background=dark
-    let g:solarized_termcolors=256 " instead of 16 color with mapping in terminal
-    colorscheme solarized
-    " customized colors
-    highlight SignColumn ctermbg=234
-    highlight StatusLine cterm=bold ctermfg=245 ctermbg=235
-    highlight StatusLineNC cterm=bold ctermfg=245 ctermbg=235
-    let g:NeatStatusLine_color_normal='ctermfg=64 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_insert='ctermfg=136 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_replace='ctermfg=160 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_visual='ctermfg=33 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_position='ctermfg=245 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_modified='ctermfg=166 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_line='ctermfg=61 ctermbg=235 cterm=bold'
-    let g:NeatStatusLine_color_filetype='ctermfg=37 ctermbg=235 cterm=bold'
-endif
+" togglable panels
+Bundle "scrooloose/nerdtree"
+Bundle "tpope/vim-vinegar"
+"Bundle "vim-scripts/taglist.vim"
+Bundle "majutsushi/tagbar"
 
-filetype plugin indent on " enable file type detection
-set autoindent
+" language vundles
+Bundle "pangloss/vim-javascript"
+Bundle "marijnh/tern_for_vim"
+Bundle "othree/javascript-libraries-syntax.vim"
 
-"---------------------
-" Basic editing config
-"---------------------
-set nu " number lines
-"set rnu " relative line numbering
-set incsearch " incremental search (as string is being typed)
-set hls " highlight search
-exec "set listchars=tab:>>,nbsp:~"
-set lbr " line break
-set ruler " show current position in file
-set scrolloff=5 " show lines above and below cursor (when possible)
-set noshowmode " hide mode
-set laststatus=2
-set backspace=indent,eol,start " allow backspacing over everything
-set timeout timeoutlen=1000 ttimeoutlen=100 " fix slow O inserts
-set autochdir " automatically set current directory to directory of last opened file
-set hidden " allow auto-hiding of edited buffers
-set history=8192 " more history
-set nojoinspaces " suppress inserting two spaces between sentences
-" use 4 spaces instead of tabs during formatting
+Bundle "fatih/vim-go"
+Bundle "plasticboy/vim-markdown"
+
+Bundle "vim-scripts/c.vim"
+
+" databases
+Bundle "vim-scripts/SQLUtilities"
+Bundle "NagatoPain/AutoSQLUpperCase.vim"
+
+" autocomplete
+" Bundle "Valloric/YouCompleteMe"
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
+
+" snippets
+Bundle "SirVer/ultisnips"
+Bundle "honza/vim-snippets"
+
+" supertab
+Bundle "ervandew/supertab"
+
+" enable all the plugins
+filetype plugin indent on
+
+""""""""""""""""""""""""""""""""
+"
+" SETTINGS & KEYBINDINGS
+"
+""""""""""""""""""""""""""""""""
 set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-" smart case-sensitive search
+set smarttab
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set autoindent
+set ruler
+set hidden
 set ignorecase
 set smartcase
-" tab completion for files/bufferss
-set wildmode=longest,list
+set showmatch
+set incsearch
+set hls
+" set relativenumber
+set nu
+set ls=2
+set cursorline
+set nowrap
+set backspace=indent,eol,start
+set shell=/bin/bash
+set completeopt -=preview
+set textwidth=100
 set wildmenu
-set mouse+=a " enable mouse mode (scrolling, selection, etc)
-if &term =~ '^screen'
-    " tmux knows the extended mouse mode
-    set ttymouse=xterm2
+set ttyfast
+set noshowmode
+set cmdheight=1
+" set autoread
+
+" backup/persistance settings
+set undodir=~/.vim/tmp/undo//
+set backupdir=~/.vim/tmp/backup//
+set directory=~/.vim/tmp/swap//
+set backupskip=/tmp/*,/private/tmp/*"
+set backup
+set writebackup
+"set noswapfile
+
+" persist (g)undo tree between sessions
+set undofile
+set history=100
+set undolevels=100
+
+" set <leader>
+let mapleader=","
+
+" enable mouse
+set mouse=a
+
+" show trailing whitespaces
+set list
+set listchars=tab:▸\ ,trail:¬,nbsp:.,extends:❯,precedes:❮
+augroup ListChars2
+    au!
+    autocmd filetype go set listchars+=tab:\ \ 
+    autocmd ColorScheme * hi! link SpecialKey Normal
+augroup END
+
+" syntax highlighting
+syntax on
+colorscheme jellybeans
+
+set t_Co=256
+
+" session management
+let g:session_directory = "~/.vim/session"
+let g:session_autoload = "no"
+let g:session_autosave = "no"
+let g:session_command_aliases = 1
+nnoremap <leader>so :OpenSession 
+nnoremap <leader>ss :SaveSession 
+nnoremap <leader>sd :DeleteSession<CR>
+nnoremap <leader>sc :CloseSession<CR>
+
+" togglables without FN keys
+nnoremap <F1> :NERDTreeToggle<CR>
+nnoremap <F2> :GundoToggle<CR>
+nnoremap <F3> :TlistToggle<CR>
+nnoremap <F4> :TagbarToggle<CR>
+set pastetoggle=<F5>
+
+" visual reselect of just pasted
+nnoremap gp `[v`]
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" Navigate betwen buffers with arrows
+map <right> :bn<cr>
+map <left> :bp<cr>
+
+" move around windows
+nmap <silent> <A-Up> :wincmd k<CR>
+nmap <silent> <A-Down> :wincmd j<CR>
+nmap <silent> <A-Left> :wincmd h<CR>
+nmap <silent> <A-Right> :wincmd l<CR>
+
+" better scrolling
+nnoremap <C-j> <C-d>
+nnoremap <C-k> <C-u>
+
+" consistent menu navigation
+inoremap <C-j> <C-n>
+inoremap <C-k> <C-p>
+
+" intellij style autocomplete shortcut
+inoremap <C-@> <C-x><C-o>
+inoremap <C-Space> <C-x><C-o>
+
+" Shortcut to cd to the directory of the current file
+nnoremap <leader>cd :cd %:p:h<CR>
+
+" ctrlP config
+let g:ctrlp_map = "<c-p>"
+nnoremap <leader>t :CtrlPMRU<CR>
+nnoremap <leader>bp :CtrlPBuffer<CR>
+
+" easy motion rebinded
+let g:EasyMotion_smartcase = 1
+nmap <leader>f <Plug>(easymotion-s2)
+" nmap <leader>F <Plug>(easymotion-F2)
+
+" open vimrc
+nnoremap <leader>v :e  ~/.vimrc<CR>
+nnoremap <leader>V :tabnew  ~/.vimrc<CR>
+
+" reload all open buffers
+nnoremap <leader>Ra :tabdo exec "windo e!"
+
+"map next-previous jumps
+nnoremap <leader>m <C-o>
+nnoremap <leader>. <C-i>
+
+" Keep search matches in the middle of the window.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Use sane regexes
+nnoremap <leader>/ /\v
+vnoremap <leader>/ /\v
+
+" Use :Subvert search
+nnoremap <leader>// :S /
+vnoremap <leader>// :S /
+
+" Use regular replace
+nnoremap <leader>s :%s /
+vnoremap <leader>s :s /
+
+" Use :Subvert replace
+nnoremap <leader>S :%S /
+vnoremap <leader>S :S /
+
+" clever-f prompt
+let g:clever_f_show_prompt = 1
+let g:clever_f_across_no_line = 1
+
+" airline
+if !exists("g:airline_symbols")
+  let g:airline_symbols = {}
+endif
+let g:airline_theme="powerlineish"
+let g:airline_powerline_fonts=1
+let g:airline#extensions#branch#empty_message  =  "no .git"
+let g:airline#extensions#whitespace#enabled    =  0
+let g:airline#extensions#syntastic#enabled     =  1
+let g:airline#extensions#tabline#enabled       =  1
+let g:airline#extensions#tabline#tab_nr_type   =  1 " tab number
+let g:airline#extensions#tabline#fnamecollapse =  1 " /a/m/model.rb
+let g:airline#extensions#hunks#non_zero_only   =  1 " git gutter
+let g:airline_symbols.space = "\ua0"
+
+" Tern
+let g:tern_map_keys=1
+
+" YouCompleteMe
+" let g:ycm_filetype_blacklist = {}
+" let g:ycm_key_list_select_completion = []
+" let g:ycm_key_list_previous_completion = []
+" let g:ycm_key_invoke_completion = "<CR>"
+" let g:ycm_collect_identifiers_from_tags_files = 1
+
+if executable("ag")
+  let g:ackprg = "ag --nogroup --column"
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
 
-"--------------------
-" Misc configurations
-"--------------------
+" reload ctags
+"nnoremap <leader>C :!ctags -R --fields=+l --exclude=.git --exclude=log --exclude=tmp *<CR><CR>
 
-" open new split panes to right and bottom, which feels more natural
-set splitbelow
-set splitright
+" git and ack stuff
+let g:gitgutter_enabled = 1
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+nnoremap <leader>G mG:Git! 
+nnoremap <leader>g :Git 
+nnoremap <leader>A :!ag 
+nnoremap <leader>a :Ag! 
 
-" quicker window movement
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
+""""""""""""""""""""""""""""""""
+"
+" PROGRAMMING LANGUAGES
+"
+""""""""""""""""""""""""""""""""
+" vim-go settings
+let g:go_fmt_command = "goimports"
+let g:go_highlight_functiond = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
 
-" disable arrow keys
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
+" vim-go bindings
+augroup FileType go
+  au!
+  au FileType go nmap gd <Plug>(go-def)
+  au FileType go nmap <Leader>dd <Plug>(go-def-vertical)
 
-" toggle relative numbering
-nnoremap <C-n> :set rnu!<CR>
+  au FileType go nmap <Leader>dv <Plug>(go-doc-vertical)
+  au FileType go nmap <Leader>db <Plug>(go-doc-browser)
 
-" save read-only files
-command -nargs=0 Sudow w !sudo tee % >/dev/null
+  au FileType go nmap <Leader>i <Plug>(go-info)
 
-"---------------------
-" Plugin configuration
-"---------------------
+  au FileType go nmap <leader>r <Plug>(go-run)
+  au FileType go nmap <leader>b <Plug>(go-build)
+  au FileType go nmap <leader>t <Plug>(go-test)
+augroup END
 
-" tagbar
-nnoremap <Leader>t :TagbarToggle<CR>
+" General file runners for various languages
+function! LangRunner()
+  if(&ft=="python")
+    nnoremap <leader>r :!python2 %<cr>
+  elseif(&ft=="ruby")
+    nnoremap <leader>r :!ruby %<cr>
+  elseif(&ft=="javascript")
+    nnoremap <leader>r :!node %<cr>
+  elseif(&ft=="php")
+    nnoremap <leader>r :!php %<cr>
+  elseif(&ft=="c")
+    nnoremap <leader>r :!make run<cr>
+  endif
+endfunction
 
-" gundo
-nnoremap <Leader>u :GundoToggle<CR>
+au BufEnter * call LangRunner()
 
-" ctrlp
-nnoremap ; :CtrlPBuffer<CR>
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_show_hidden = 1
+" enable angular syntax
+let g:used_javascript_libs = 'jquery,angularjs'
 
-" ag
-let g:ag_mapping_message=0
-command -nargs=+ Gag Gcd | Ag! <args>
-nnoremap K :Gag "\b<C-R><C-W>\b"<CR>:cw<CR>
-if executable('ag')
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+" ejs syntax highlighting
+au BufNewFile,BufRead *.ejs set filetype=html
+
+""""""""""""""""""""""""""""""""
+"
+" COOL HACKS
+"
+""""""""""""""""""""""""""""""""
+" Make sure Vim returns to the same line when you reopen a file.
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END
+
+" Visual Mode */# from Scrooloose
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
+vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
+
+" Text Highlighter = <leader>h[1-4]
+function! HiInterestingWord(n)
+    " Save our location.
+    normal! mz
+    " Yank the current word into the z register.
+    normal! "zyiw
+    " Calculate an arbitrary match ID.  Hopefully nothing else is using it.
+    let mid = 86750 + a:n
+    " Clear existing matches, but don't worry if they don't exist.
+    silent! call matchdelete(mid)
+    " Construct a literal pattern that has to match at boundaries.
+    let pat = '\V\<' . escape(@z, '\') . '\>'
+    " Actually match the words.
+    call matchadd("InterestingWord" . a:n, pat, 1, mid)
+    " Move back to our original location.
+    normal! `z
+endfunction
+
+nnoremap <leader>hh :call clearmatches()<CR>:noh<CR>
+nnoremap <silent> <leader>hj :call HiInterestingWord(1)<cr>
+nnoremap <silent> <leader>hk :call HiInterestingWord(2)<cr>
+nnoremap <silent> <leader>hl :call HiInterestingWord(3)<cr>
+nnoremap <silent> <leader>hu :call HiInterestingWord(4)<cr>
+nnoremap <silent> <leader>hi :call HiInterestingWord(5)<cr>
+nnoremap <silent> <leader>ho :call HiInterestingWord(6)<cr>
+
+hi def InterestingWord1 guifg=#000000 ctermfg=16 guibg=#ffa724 ctermbg=214
+hi def InterestingWord2 guifg=#000000 ctermfg=16 guibg=#aeee00 ctermbg=154
+hi def InterestingWord3 guifg=#000000 ctermfg=16 guibg=#8cffba ctermbg=121
+hi def InterestingWord4 guifg=#000000 ctermfg=16 guibg=#b88853 ctermbg=137
+hi def InterestingWord5 guifg=#000000 ctermfg=16 guibg=#ff9eb8 ctermbg=211
+hi def InterestingWord6 guifg=#000000 ctermfg=16 guibg=#ff2c4b ctermbg=195
+
+highlight search ctermfg=white ctermbg=3423513
+
+" better retab
+fu! Retab()
+  :retab
+  :%s/\s\+$//
+endfunction
+
+""""""""""""""""""""""""""""""""
+"
+" BUG WORKAROUNDS
+"
+""""""""""""""""""""""""""""""""
+" realign buffers when iterm goes fullscreen
+augroup FixProportionsOnResize
+  au!
+  au VimResized * exe "normal! \<c-w>="
+augroup END
+
+" vim mode-switch lag fix
+if ! has("gui_running")
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
 endif
 
-" syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = {
-    \ 'mode': 'passive',
-    \ 'active_filetypes': [],
-    \ 'passive_filetypes': []
-\}
-nnoremap <Leader>s :SyntasticCheck<CR>
-nnoremap <Leader>r :SyntasticReset<CR>
-nnoremap <Leader>i :SyntasticInfo<CR>
-nnoremap <Leader>m :SyntasticToggleMode<CR>
-
-"---------------------
-" Local customizations
-"---------------------
-
-" local customizations in ~/.vimrc_local
-let $LOCALFILE=expand("~/.vimrc_local")
-if filereadable($LOCALFILE)
-    source $LOCALFILE
+" macos vs linux clipboard
+if has("mac")
+  set clipboard+=unnamed
+else
+  set clipboard=unnamedplus
 endif
+
+" make C-a, C-x work properly
+set nrformats=
+
+" potential lag fix
+let g:matchparen_insert_timeout=1
+
+" fix bufexplorer bug with hidden
+let g:bufExplorerFindActive=0
